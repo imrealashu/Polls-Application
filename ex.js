@@ -1,8 +1,14 @@
+/*
+Author: Ashish Singh & Abhishek Banerjee
+Version: 1.0.0
+License: GNU V3
+*/
+
 var express = require('express')
 var bodyParser = require("body-parser");
 var app = express()
 app.use("/vendor", express.static(__dirname + '/vendor'));
-//app.use(express.bodyParser());
+//Make vendor directory static for including static files
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({strict: false}));
@@ -15,43 +21,27 @@ var connection = mysql.createConnection({
  database : 'node_polls'
 });
 connection.connect();
+
 app.get('/', function (req, res) {
-
-
-
   connection.query('SELECT * FROM question', function(err, rows, fields) {
     if (err) throw err;
-
-    res.render("home.jade",{"rows":rows});
-    // console.log(rows);
+    res.render("home.jade",{"rows":rows});    
   });
-
-//connection.end();
-  //res.send('Hello World!')
 });
-
 
 app.get('/question/:qid', function (req, res) {
   var q = req.params.qid;
-//res.send(q);
-var data=[];
-//connection.connect();
-connection.query('SELECT * FROM question WHERE qid ='+q, function(err, rows, fields) {
-  if (err) throw err;
-  data['question']= rows;
-
-  
-  //console.log(rows);
+  var data=[];
+  connection.query('SELECT * FROM question WHERE qid ='+q, function(err, rows, fields) {
+    if (err) throw err;
+    data['question']= rows;
+  //setting data in data variable
 });
-connection.query('SELECT * FROM answer WHERE qid ='+q, function(err, rows, fields) {
-  if (err) throw err;
-  data['ans']=rows;
-  res.render("question.jade",{"data":data});
-  // console.log(data);
-});
-
-//connection.end();
-  //res.send('Hello World!')
+  connection.query('SELECT * FROM answer WHERE qid ='+q, function(err, rows, fields) {
+    if (err) throw err;
+    data['ans']=rows;
+    res.render("question.jade",{"data":data});
+  });
 });
 
 app.post('/question/result', function (req, res) {
@@ -66,12 +56,11 @@ app.post('/question/result', function (req, res) {
       if (err) throw err;
       data['ans']=rows;
       lock -= 1;
-    //  console.log("ye walah hai "+rows);
-    if(lock ==0){
-      res.render("result.jade",{"data":data});
-    }
-    
-  }); 
+      if(lock ==0){
+        res.render("result.jade",{"data":data});
+      }
+
+    }); 
     connection.query('SELECT * FROM question WHERE qid ='+q, function(err, rows, fields) {
       if (err) throw err;
       data['question']= rows;
@@ -95,17 +84,7 @@ app.get('/add',function(req, res){
 app.post('/question/add_question', function (req, res) {
   console.log('asd: '+req.accepts('application/json'));
   var allData = (req.body);
-  // console.log(allData['option_0']);
-
-  // var abc = JSON.parse(allData);
-
-    // console.log(abc);
-  // if(Array.isArray(d)) {
-  //   console.log(d[0]);
-  // }
-  // res.send(req.body);
-  // console.log(allData['options']);
-console.log(Object.keys(allData).length);
+  console.log(Object.keys(allData).length);
   var date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   
   connection.query('INSERT INTO question(question,question.date,description) values("'+allData['question']+'","'+date+'","'+allData['description']+'")', function(err, rows, fields) {
@@ -116,15 +95,9 @@ console.log(Object.keys(allData).length);
        if (err) throw err;
      });      
     }
-
-
-
   }); 
   res.send('success');
 });
-
-//---------------------------------------------//
-
 
 var server = app.listen(3000, function () {
 
