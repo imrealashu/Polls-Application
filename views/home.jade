@@ -1,0 +1,25 @@
+extends layout
+mixin link(qid, ques, name)
+	li
+		a(href='question/'+qid)= ques
+block content
+
+	div.jumbotron
+		div.container
+			h1.glyphicon.glyphicon-cog Polls Application
+			p Basic polls application built using Node.js, Express.js, MySQL and Bootstrap. User Can add question, View Question and can even vote for previous questions asked by other users and view the results
+			div
+				form(method="post",action="/question/add")
+					div.col-lg-4
+						input(type="text" name="new_question" class="form-control" placeholder="Enter your Question")
+						input(type="submit" value="Add Question" class="btn btn-success btn-sm")
+
+	div.container
+		ul#questions.list-inline
+			br
+			h4 Questions by Users
+
+			each val in rows
+				+link(val.qid,val.question,'')
+				br
+			

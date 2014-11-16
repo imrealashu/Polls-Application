@@ -1,0 +1,19 @@
+extends layout
+block content
+	ol(style="margin-top:30px").breadcrumb.container
+		li
+			a(href="/") Home
+		li.disabled Question
+	div(style="padding-left: 50px").container.well
+		each item in data.question
+			h3 #{item.question}
+			i Description: #{item.description}
+
+		form(method="POST", action="/question/result")
+			input(type="hidden", name="qid", value=data.question[0].qid)
+			each item in data.ans
+				div.radio
+					label
+						input(type="radio",name="post_answer",value=item.aid)
+						|#{item.answer}
+			input(type="submit" value="Poll" class="btn btn-primary btn-sm")

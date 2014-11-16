@@ -1,0 +1,55 @@
+extends layout
+block content
+	ol(style="margin-top:30px").breadcrumb.container
+			li
+				a(href="/") Home
+			li.disabled Add Question
+	div.container.well
+		div.col-lg-4
+			h3 Add New Question
+			form(method="post")
+				input(type="text",name="question", value=question id="ques",style="margin-bottom:3px").form-control
+				textarea(placeholder="description", name="desc" id="desc" rows="3" style="margin-bottom:3px").form-control
+				input(type="text",class="opt", placeholder="Option",style="margin-bottom:3px").form-control
+				div(id="blank")
+				input(type="button", onClick="add()" value="+").btn.btn-danger.btn-xs
+				br
+				br
+				input(type="button" value="Add question" onClick="submit_form()").btn.btn-primary
+
+	script(type="text/javascript").
+		function add(){
+			
+			$('#blank').append('<input type="text" class="opt form-control" placeholder ="Option" style="margin-bottom:3px"/>');
+			}
+		function submit_form(){
+		var options = {};
+		var data = {};
+		data['option'] = {};
+		var ques = $('#ques').val();
+		var desc = $('#desc').val();
+			var i=0;
+			$('.opt').each(function(){
+
+			data['option_'+i] = ($(this).val());
+			i+=1;
+			});
+			//data['options'] = options;
+			data['question'] = ques;
+			data['description'] = desc;
+
+			$.ajax({
+				url: '/question/add_question',
+				
+				data: data,
+				type: 'POST',
+			}).success(function(data){
+				if(data == 'success'){
+				window.location.href = '/';
+				}else{
+				console.log(data);
+				}
+			});
+			console.log(data);
+			
+		}
