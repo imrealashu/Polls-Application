@@ -22,6 +22,7 @@ Create Database named "node_polls"
 Import "node_polls.sql"
 ##Run locally
 > node ex.js
+
 Go to this link [http://0.0.0.0:3000](http://0.0.0.0:3000)
 ##License
 [GNU GPL V3](http://www.gnu.org/licenses/gpl-3.0.html)
